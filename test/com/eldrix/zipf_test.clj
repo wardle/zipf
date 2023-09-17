@@ -34,20 +34,19 @@
     (is (Files/exists (.resolve unzipped "Z1-ZIP/z1f1") (into-array LinkOption [])))
     (is (Files/exists (.resolve unzipped "z2/z2-zip/z2f1") (into-array LinkOption [])))))
 
-(deftest test-zip
-  (let [dir (Files/createTempDirectory "zipf" (make-array FileAttribute 0))
-        archive-name (str (.getFileName dir))
-        f1 (.resolve dir "f1.txt")
-        f2 (.resolve dir "f2.txt")]
-    (spit (.toFile f1) "f1.txt")
-    (spit (.toFile f2) "f2.txt")
+(deftest test-zip-unzip
+  (let [dir (Paths/get (.toURI (io/resource "test-dir")))
+        archive-name (str (.getFileName dir))]
     (let [zip-file (zipf/zip dir)
           unzipped (zipf/unzip zip-file)
           root (.resolve unzipped archive-name)
-          f1' (.resolve root "f1.txt")
-          f2' (.resolve root "f2.txt")]
-      (is (= "f1.txt" (slurp (.toFile f1'))))
-      (is (= "f2.txt" (slurp (.toFile f2')))))))
+          f1 (.resolve root "f1.txt")
+          f2 (.resolve root "f2.txt")
+          d1 (.resolve root "d1")
+          f3 (.resolve d1 "f3.txt")]
+      (is (= "f1.txt" (slurp (.toFile f1))))
+      (is (= "f2.txt" (slurp (.toFile f2))))
+      (is (= "f3.txt" (slurp (.toFile f3)))))))
 
 (comment
   (run-tests))
