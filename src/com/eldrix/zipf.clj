@@ -17,8 +17,8 @@
 
   If no `out` path is specified, a temporary directory will be created.
   The out directory will be created if it doesn't exist."
-  ([^Path in] (unzip in nil))
-  ([^Path in ^Path out]
+  (^Path [^Path in] (unzip in nil))
+  (^Path [^Path in ^Path out]
    (let [out-path (if out (Files/createDirectories out (make-array FileAttribute 0)) ;; this will be a NOP if directory already exists
                           (Files/createTempDirectory nil (make-array FileAttribute 0)))]
      (with-open [input (ZipInputStream. (io/input-stream (.toFile in)))]
@@ -139,13 +139,13 @@
   (doseq [path (flatten paths)]
     (delete-files (.toFile ^Path path))))
 
-(defn zip
+(defn zipf
   "Zip a file or directory, either to a temporary file, or the named file.
   Returns `java.io.File` for the created zip file."
-  ([f]
-   (zip nil f))
-  ([zip-file f]
-   (let [zf (io/file (or zip-file (.toFile (Files/createTempFile nil "zip" (make-array FileAttribute 0)))))]
+  (^File [f]
+   (zipf nil f))
+  (^File [zip-file f]
+   (let [zf (io/file (or zip-file (.toFile (Files/createTempFile nil ".zip" (make-array FileAttribute 0)))))]
      (with-open [fos (FileOutputStream. zf)
                  zos (ZipOutputStream. fos)]
        (let [f' (io/file f)
@@ -156,5 +156,11 @@
              (io/copy f'' zos)
              (.closeEntry zos)))
          zf)))))
+
+(defn zip
+  (^Path [^Path f]
+   (zip nil f))
+  (^Path [^Path zip-file ^Path f]
+   (.toPath (zipf (when zip-file (.toFile zip-file)) (.toFile f)))))
 
 (comment)
