@@ -2,7 +2,7 @@
 
  :aliases
  {:build
-  {:deps       {io.github.clojure/tools.build {:git/tag "v0.9.4" :git/sha "76b78fe"}
+  {:deps       {io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}
                 slipset/deps-deploy           {:mvn/version "RELEASE"}}
    :ns-default build}
 
@@ -10,4 +10,12 @@
   {:extra-paths ["test" "test/resources"]
    :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
                                             :sha     "7284cda41fb9edc0f3bc6b6185cfb7138fc8a023"}}
-   :main-opts   ["-m" "cognitect.test-runner"]}}}
+   :main-opts   ["-m" "cognitect.test-runner"]}
+
+  :outdated
+  {:extra-deps {com.github.liquidz/antq {:mvn/version "2.7.1133"}}
+   :main-opts  ["-m" "antq.core"]}
+
+  :upgrade
+  {:extra-deps {com.github.liquidz/antq {:mvn/version "2.7.1133"}}
+   :main-opts  ["-m" "antq.core" "--upgrade"]}}}
